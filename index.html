@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Шрифт — начало</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Экран 1: Приветствие -->
+        <div id="splash-screen" class="screen active">
+            <div class="logo">Ш</div>
+            <div class="tagline" id="tagline"></div>
+            <button id="get-started-btn" class="btn-start">Продолжить</button>
+        </div>
+
+        <!-- Экран 2: Вход -->
+        <div id="login-screen" class="screen">
+            <h1>Добро пожаловать</h1>
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="ru">🇷🇺 Русский</button>
+                <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+            </div>
+            <div class="phone-input-area">
+                <input type="tel" id="phone-number" placeholder="+7  ___  ___  __  __" class="phone-input">
+            </div>
+            <button id="get-code-btn" class="btn-primary" disabled>Получить код</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
