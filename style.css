@@ -1,4 +1,4 @@
-[23.04.2026 21:20] Kain🐾: * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -149,7 +149,7 @@ body {
 }
 .profile-page-name { font-size: 24px; font-weight: bold; margin-top: 12px; }
 .profile-page-details { margin-top: 32px; text-align: left; background: rgba(255,255,255,0.05); border-radius: 24px; padding: 16px; }
-[23.04.2026 21:20] Kain🐾: .profile-detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #2a2a3a; }
+.profile-detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #2a2a3a; }
 .detail-label { color: #8E9AAF; }
 .btn-back-chat { background: none; border: none; color: #00E5FF; font-size: 28px; cursor: pointer; width: 44px; }
 .profile-header-simple {
@@ -224,7 +224,7 @@ body {
 .settings-title { color: #00E5FF; margin-bottom: 12px; }
 .setting-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #2a2a3a; }
 .switch { position: relative; display: inline-block; width: 48px; height: 24px; }
-[23.04.2026 21:20] Kain🐾: .switch input { opacity: 0; width: 0; height: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2a2a3a; border-radius: 34px; }
 .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.2s; }
 input:checked + .slider { background-color: #00E5FF; }
