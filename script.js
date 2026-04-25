@@ -72,6 +72,7 @@ let currentSloganIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typeTimer;
+let sloganTimer;
 let isTyping = false;
 
 function getCurrentSlogans() {
@@ -89,7 +90,7 @@ function typeSlogan() {
         if (charIndex >= fullSlogan.length) {
             isTyping = false;
             clearTimeout(typeTimer);
-            setTimeout(() => {
+            sloganTimer = setTimeout(() => {
                 isDeleting = true;
                 isTyping = true;
                 typeSlogan();
@@ -105,7 +106,7 @@ function typeSlogan() {
             isTyping = false;
             currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
             clearTimeout(typeTimer);
-            setTimeout(() => {
+            typeTimer = setTimeout(() => {
                 isTyping = true;
                 typeSlogan();
             }, 300);
@@ -119,6 +120,7 @@ function typeSlogan() {
 
 function resetAndRestartTyping() {
     clearTimeout(typeTimer);
+    clearTimeout(sloganTimer);
     charIndex = 0;
     isDeleting = false;
     isTyping = true;
@@ -161,22 +163,21 @@ function formatPhoneNumber(value) {
 
 function updatePhoneDisplay() {
     const value = phoneInput.value.replace(/\D/g, '');
-    phoneInput.value = formatPhoneNumber(value);
     
     // Обновление маски
-    const digits = value.length;
     const placeholder = '___ ___-__-__';
     const formatted = formatPhoneNumber(value);
     let maskedDisplay = formatted;
     
+    // Добавляем оставшиеся символы маски
     for (let i = formatted.length; i < placeholder.length; i++) {
         maskedDisplay += placeholder[i];
     }
     
     phoneMask.textContent = '🔑 ' + maskedDisplay;
     
-    // Активация кнопки
-    if (digits.length === 10) {
+    // Активация кнопки при 10 цифрах
+    if (value.length === 10) {
         getCodeBtn.disabled = false;
         phoneInput.style.borderBottomColor = '#00ff88';
         phoneInput.style.boxShadow = '0 5px 15px -5px rgba(0, 255, 136, 0.3)';
@@ -199,7 +200,7 @@ function showPage(page) {
     } else if (page === 'auth') {
         authPage.classList.add('active');
         updateAuthTexts();
-        phoneInput.focus();
+        setTimeout(() => phoneInput.focus(), 300);
     }
 }
 
@@ -244,6 +245,7 @@ backBtn.addEventListener('click', () => {
     updatePhoneDisplay();
     getCodeBtn.disabled = true;
     getCodeBtn.classList.remove('loading');
+    btnText.textContent = authTexts[currentLang].getCode;
 });
 
 // Переключение языка
@@ -267,18 +269,75 @@ langToggle.addEventListener('click', () => {
 // Ввод телефона
 phoneInput.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
+    
+    // Ограничиваем 10 цифрами
     if (value.length > 10) {
         value = value.substring(0, 10);
     }
-    phoneInput.value = formatPhoneNumber(value);
+    
+    // Сохраняем позицию курсора
+    const cursorPos = e.target.selectionStart;
+    const oldLength = e.target.value.length;
+    
+    // Форматируем и обновляем значение
+    const formatted = formatPhoneNumber(value);
+    e.target.value = formatted;
+    
+    // Восстанавливаем позицию курсора
+    const newLength = formatted.length;
+    const newCursorPos = cursorPos + (newLength - oldLength);
+    e.target.setSelectionRange(newCursorPos, newCursorPos);
+    
     updatePhoneDisplay();
 });
 
-// Запрет ввода не-цифр
+// Запрет ввода не-цифр и контроль лимита
 phoneInput.addEventListener('keydown', (e) => {
-    if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+    // Разрешаем управляющие клавиши
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End', 'Escape'];
+    if (allowedKeys.includes(e.key)) {
+        return;
+    }
+    
+    // Блокируем всё, кроме цифр
+    if (!/[0-9]/.test(e.key)) {
+        e.preventDefault();
+        return;
+    }
+    
+    // Проверяем, не превышен ли лимит в 10 цифр
+    const currentDigits = phoneInput.value.replace(/\D/g, '');
+    if (currentDigits.length >= 10) {
         e.preventDefault();
     }
+});
+
+// Вставка из буфера обмена
+phoneInput.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+    const digits = pastedData.replace(/\D/g, '').substring(0, 10);
+    
+    // Получаем текущие цифры до курсора
+    const cursorPos = e.target.selectionStart;
+    const currentValue = e.target.value;
+    const digitsBeforeCursor = currentValue.substring(0, cursorPos).replace(/\D/g, '');
+    const digitsAfterCursor = currentValue.substring(e.target.selectionEnd).replace(/\D/g, '');
+    
+    // Собираем полный номер
+    let allDigits = digitsBeforeCursor + digits + digitsAfterCursor;
+    if (allDigits.length > 10) {
+        allDigits = allDigits.substring(0, 10);
+    }
+    
+    const formatted = formatPhoneNumber(allDigits);
+    e.target.value = formatted;
+    
+    // Ставим курсор после вставленных цифр
+    const newCursorPos = formatPhoneNumber(digitsBeforeCursor + digits).length;
+    e.target.setSelectionRange(newCursorPos, newCursorPos);
+    
+    updatePhoneDisplay();
 });
 
 // Получить код
@@ -304,7 +363,7 @@ getCodeBtn.addEventListener('click', () => {
             phoneInput.style.borderBottomColor = '#00ff88';
             phoneInput.style.boxShadow = '0 5px 25px -5px rgba(0, 255, 136, 0.6)';
             setTimeout(() => {
-                phoneInput.style.boxShadow = '';
+                phoneInput.style.boxShadow = '0 5px 15px -5px rgba(0, 255, 136, 0.3)';
             }, 2000);
         }, 2000);
     }
@@ -312,7 +371,12 @@ getCodeBtn.addEventListener('click', () => {
 
 // ============ УВЕДОМЛЕНИЕ ============
 function showNotification(message) {
+    // Удаляем предыдущие уведомления
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(n => n.remove());
+    
     const notification = document.createElement('div');
+    notification.className = 'notification';
     notification.style.cssText = `
         position: fixed;
         top: 30px;
@@ -342,20 +406,6 @@ function showNotification(message) {
     }, 3000);
 }
 
-// Добавляем анимации для уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    @keyframes slideUp {
-        from { opacity: 1; transform: translateX(-50%) translateY(0); }
-        to { opacity: 0; transform: translateX(-50%) translateY(-30px); }
-    }
-`;
-document.head.appendChild(style);
-
 // ============ ИНИЦИАЛИЗАЦИЯ ============
 // Применяем сохранённый язык
 updateAllTexts();
@@ -377,7 +427,7 @@ document.querySelector('.sh-letter').addEventListener('mouseleave', function() {
     `;
 });
 
-// Цифровой дождь на странице авторизации
+// ============ ЦИФРОВОЙ ДОЖДЬ ============
 function createDigitalRain() {
     const rainContainer = document.querySelector('.digital-rain');
     if (!rainContainer) return;
@@ -385,6 +435,8 @@ function createDigitalRain() {
     const characters = '01';
     
     setInterval(() => {
+        if (currentPage !== 'auth') return;
+        
         const rain = document.createElement('span');
         rain.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
         rain.style.cssText = `
@@ -406,19 +458,10 @@ function createDigitalRain() {
     }, 100);
 }
 
-const rainStyle = document.createElement('style');
-rainStyle.textContent = `
-    @keyframes rainDrop {
-        0% { transform: translateY(0); opacity: 0.3; }
-        70% { opacity: 0.2; }
-        100% { transform: translateY(100vh); opacity: 0; }
-    }
-`;
-document.head.appendChild(rainStyle);
-
+// Запускаем цифровой дождь
 createDigitalRain();
 
-// Автофокус на поле ввода при переходе на страницу авторизации
+// Наблюдатель за изменением класса authPage для фокуса
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
         if (mutation.target.id === 'authPage' && authPage.classList.contains('active')) {
