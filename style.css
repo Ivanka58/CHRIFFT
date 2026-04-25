@@ -305,7 +305,7 @@ body::before {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
     margin-bottom: 10px;
 }
 
@@ -334,6 +334,9 @@ body::before {
     transition: all 0.3s ease;
     caret-color: #ff0044;
     text-shadow: 0 0 10px rgba(224, 192, 255, 0.5);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .phone-input::placeholder {
