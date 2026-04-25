@@ -67,6 +67,200 @@
             <div class="digital-rain"></div>
         </div>
     </div>
+
+    <!-- Страница ввода кода -->
+    <div id="codePage" class="page">
+        <div class="code-container">
+            <div class="code-back-btn" id="codeBackBtn">
+                <span class="back-arrow">←</span>
+                <span class="back-text">Назад</span>
+            </div>
+            
+            <div class="code-icon">🔐</div>
+            
+            <h1 class="code-title">Код подтверждения</h1>
+            <p class="code-subtitle" id="codeMessage">SMS отправлено на номер +7 999 999-99-99</p>
+            
+            <div class="code-input-wrapper">
+                <div class="code-input-container">
+                    <input 
+                        type="text" 
+                        id="codeLetter" 
+                        class="code-letter-input" 
+                        maxlength="1"
+                        placeholder="A"
+                        autocomplete="off"
+                    >
+                    <span class="code-separator">-</span>
+                    <div class="code-digits-group" id="codeDigitsGroup">
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="0">
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="1">
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="2">
+                        <span class="code-space"></span>
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="3">
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="4">
+                        <input type="text" class="code-digit-input" maxlength="1" inputmode="numeric" data-index="5">
+                    </div>
+                </div>
+                <div class="code-error" id="codeError"></div>
+            </div>
+            
+            <div class="code-timer-container">
+                <span class="timer-text" id="timerText">Отправить снова через 1:00</span>
+                <button class="resend-btn" id="resendBtn" disabled>Отправить заново</button>
+            </div>
+            
+            <div class="digital-rain"></div>
+        </div>
+    </div>
+
+    <!-- Страница чатов -->
+    <div id="chatsPage" class="page">
+        <div class="chats-container">
+            <!-- Боковое меню -->
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo">Ш</div>
+                    <div class="sidebar-title">ШИФР</div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-tab="chats">
+                        <span class="nav-icon">💬</span>
+                        <span class="nav-text">Чаты</span>
+                        <span class="nav-badge">1</span>
+                    </button>
+                    <button class="nav-item" data-tab="contacts">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Контакты</span>
+                    </button>
+                    <button class="nav-item" data-tab="settings">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Настройки</span>
+                    </button>
+                    <button class="nav-item" data-tab="profile">
+                        <span class="nav-icon">🛡️</span>
+                        <span class="nav-text">Профиль</span>
+                    </button>
+                </nav>
+                
+                <div class="sidebar-footer">
+                    <div class="security-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Канал защищён</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <span>🚪</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Основная область -->
+            <div class="main-content">
+                <!-- Список чатов -->
+                <div class="tab-content active" id="chatsTab">
+                    <div class="chats-header">
+                        <h2>Сообщения</h2>
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" placeholder="Поиск..." class="search-input">
+                        </div>
+                    </div>
+                    
+                    <div class="chats-list">
+                        <div class="chat-item active-chat">
+                            <div class="chat-avatar">Т</div>
+                            <div class="chat-info">
+                                <div class="chat-header">
+                                    <h3>Тестирование</h3>
+                                    <span class="chat-time">12:34</span>
+                                </div>
+                                <div class="chat-preview">
+                                    <p>Добро пожаловать в ШИФР! 🔐</p>
+                                    <span class="encryption-badge">🔒 E2E</span>
+                                </div>
+                            </div>
+                            <div class="chat-status online"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Вкладка Контакты -->
+                <div class="tab-content" id="contactsTab">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">👥</div>
+                        <h2>Контакты</h2>
+                        <p>Здесь будут ваши контакты</p>
+                    </div>
+                </div>
+                
+                <!-- Вкладка Настройки -->
+                <div class="tab-content" id="settingsTab">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">⚙️</div>
+                        <h2>Настройки</h2>
+                        <p>Настройки безопасности и приватности</p>
+                    </div>
+                </div>
+                
+                <!-- Вкладка Профиль -->
+                <div class="tab-content" id="profileTab">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">🛡️</div>
+                        <h2>Профиль</h2>
+                        <p>Ваш защищённый профиль</p>
+                    </div>
+                </div>
+                
+                <!-- Окно чата -->
+                <div class="chat-window" id="chatWindow" style="display: none;">
+                    <div class="chat-window-header">
+                        <button class="back-to-chats" id="backToChats">←</button>
+                        <div class="chat-window-avatar">Т</div>
+                        <div class="chat-window-info">
+                            <h3>Тестирование</h3>
+                            <span class="chat-window-status">🔒 Шифрование E2E</span>
+                        </div>
+                        <button class="chat-menu-btn">⋯</button>
+                    </div>
+                    
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="message-date">Сегодня</div>
+                        <div class="message received">
+                            <div class="message-bubble">
+                                <p>Добро пожаловать в ШИФР! 🔐</p>
+                                <span class="message-time">12:30</span>
+                            </div>
+                        </div>
+                        <div class="message received">
+                            <div class="message-bubble">
+                                <p>Это самый защищённый мессенджер. Все сообщения зашифрованы end-to-end.</p>
+                                <span class="message-time">12:30</span>
+                            </div>
+                        </div>
+                        <div class="message sent">
+                            <div class="message-bubble">
+                                <p>Привет! Рад быть здесь! 🚀</p>
+                                <span class="message-time">12:31 ✓✓</span>
+                            </div>
+                        </div>
+                        <div class="message received">
+                            <div class="message-bubble">
+                                <p>Твой код — твои правила. Говори свободно!</p>
+                                <span class="message-time">12:32</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-input-container">
+                        <button class="attach-btn">📎</button>
+                        <input type="text" class="message-input" id="messageInput" placeholder="Сообщение...">
+                        <button class="send-btn" id="sendMsgBtn">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script src="script.js"></script>
 </body>
